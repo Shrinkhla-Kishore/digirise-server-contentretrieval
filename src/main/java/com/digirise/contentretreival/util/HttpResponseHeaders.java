@@ -7,7 +7,7 @@ import org.springframework.http.MediaType;
 
 /**
  * Created by IntelliJ IDEA.
- * Date: 2020-02-15
+ * Date: 2020-03-07
  * Author: shrinkhlak
  */
 public class HttpResponseHeaders {

@@ -6,12 +6,11 @@ import org.slf4j.LoggerFactory;
 
 /**
  * Created by IntelliJ IDEA.
- * Date: 2020-02-15
+ * Date: 2020-03-07
  * Author: shrinkhlak
  */
 
-//@Getter (lazy = true)
-//@Setter
+
 @NoArgsConstructor
 public class VideoRequest {
     private static final Logger s_logger = LoggerFactory.getLogger(VideoRequest.class);
