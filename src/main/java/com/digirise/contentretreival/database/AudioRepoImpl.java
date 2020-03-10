@@ -15,24 +15,24 @@ import java.util.concurrent.atomic.AtomicInteger;
  */
 
 @Repository
-public class VideoRepoImpl implements VideoRepo{
-    private static final Logger s_logger = LoggerFactory.getLogger(VideoRepoImpl.class);
-    private static final String s_location = "C:\\Users\\PublicMusic\\";
-    private Map<String, Video> videoLocationMap = new ConcurrentHashMap<>();
+public class AudioRepoImpl implements AudioRepo {
+    private static final Logger s_logger = LoggerFactory.getLogger(AudioRepoImpl.class);
+    private static final String s_location = "C:\\Users\\test\\Music\\";
+    private Map<String, Audio> audioLocationMap = new ConcurrentHashMap<>();
     private AtomicInteger episoderNumberCounter = new AtomicInteger(0);
     private int sleepTimer = 0;
 
 
     @Override
-    public Video getOrCreateVideoLocation(String videoTitle, String uuid) {
-        Video video = videoLocationMap.get(uuid);
-        if (video == null){
+    public Audio getOrCreateAudioLocation(String audioTitle, String uuid) {
+        Audio audio = audioLocationMap.get(uuid);
+        if (audio == null){
             // For the test purpose only. No database is created
-            video = new Video();
-            video.setTitle(videoTitle);
-            video.setEpisodeNumber(episoderNumberCounter.incrementAndGet());
-            video.setLocation(s_location);
-            videoLocationMap.put(uuid, video);
+            audio = new Audio();
+            audio.setTitle(audioTitle);
+            audio.setEpisodeNumber(episoderNumberCounter.incrementAndGet());
+            audio.setLocation(s_location);
+            audioLocationMap.put(uuid, audio);
         }
         try {
             s_logger.info("Putting the current thread {} to sleep", Thread.currentThread().getName());
@@ -40,7 +40,7 @@ public class VideoRepoImpl implements VideoRepo{
         } catch (InterruptedException e) {
             e.printStackTrace();
         }
-        return video;
+        return audio;
 
     }
 }

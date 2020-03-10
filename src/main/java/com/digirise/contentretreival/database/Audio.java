@@ -8,7 +8,7 @@ import java.util.concurrent.atomic.AtomicInteger;
  * Date: 2020-03-07
  * Author: shrinkhlak
  */
-public class Video {
+public class Audio {
     public String title;
     public int episodeNumber;
     public String location;

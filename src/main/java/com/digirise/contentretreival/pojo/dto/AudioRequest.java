@@ -12,13 +12,13 @@ import org.slf4j.LoggerFactory;
 
 
 @NoArgsConstructor
-public class VideoRequest {
-    private static final Logger s_logger = LoggerFactory.getLogger(VideoRequest.class);
+public class AudioRequest {
+    private static final Logger s_logger = LoggerFactory.getLogger(AudioRequest.class);
     private String title;
     private String episodeNumber;
     private String location;
 
-    public VideoRequest(String title){
+    public AudioRequest(String title){
         this.title = title;
     }
 
