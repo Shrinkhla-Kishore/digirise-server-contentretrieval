@@ -17,7 +17,7 @@ import java.util.function.Function;
  */
 public class AudioLocationTask {
     private static final Logger s_logger = LoggerFactory.getLogger(AudioLocationTask.class);
-    private static final int TIMEOUT_DURATION = 2000;
+    private static final int TIMEOUT_DURATION = 1000;
     private static final int MAX_RETRIES = 3;
     private AudioRepo audioRepo;
     private ScheduledExecutorService timeoutExecutorService = Executors.newScheduledThreadPool(1);
@@ -32,24 +32,33 @@ public class AudioLocationTask {
     }
 
     public CompletableFuture<Audio> getAudioLocation(){
+        CompletableFuture<Audio> finalResults = new CompletableFuture<>();
         CompletableFuture<Audio> audioLocation = CompletableFuture.supplyAsync(() -> {
-            return audioRepo.getOrCreateAudioLocation(title, uuid);
+            Audio audio = audioRepo.getOrCreateAudioLocation(title, uuid);
+            s_logger.info("Returning with results :)");
+            finalResults.complete(audio);
+            return audio;
         });
         CompletableFuture<Audio> timeoutFuture = failAfter(TIMEOUT_DURATION);
         audioLocation.applyToEither(timeoutFuture, Function.identity())
-                .exceptionally((throwable) -> {
+                .whenComplete((audio, throwable) -> {
                     s_logger.debug("Timeout {}", throwable.getCause());
                     if (throwable.getCause() instanceof TimeoutException && retries < MAX_RETRIES) {
                         retries++;
-                        s_logger.info("Failed to get audio location after {} tries", retries);
+                        s_logger.info("Failed to get audio location after {} tries. Trying again !", retries);
+                        audioLocation.cancel(true);
                         getAudioLocation();
+                    } else if (audio == null && retries >= MAX_RETRIES){
+                        s_logger.info("audioRepo location for title " + title + " not found after " + MAX_RETRIES  + " attempts");
+                        finalResults.completeExceptionally(new Throwable("Unable to fetch location for title " + title + " after " + MAX_RETRIES +" attempts"));
+                        s_logger.info("Returning :( !!!");
                     } else {
-                        s_logger.debug("audioRepo location for title" + title + "not found after " + MAX_RETRIES + 1 + "attempts");
-                        return null;
+                        s_logger.info("Audio found");
+                        finalResults.complete(audio);
                     }
-                    return null;
                 });
-        return audioLocation;
+        s_logger.info("*** Returning the results ***");
+        return finalResults;
     }
 
     private CompletableFuture<Audio> failAfter(int timeoutDuration) {

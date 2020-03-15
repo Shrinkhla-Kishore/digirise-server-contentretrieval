@@ -35,7 +35,7 @@ public class AudioRepoImpl implements AudioRepo {
             audioLocationMap.put(uuid, audio);
         }
         try {
-            s_logger.info("Putting the current thread {} to sleep", Thread.currentThread().getName());
+            s_logger.info("Putting the current thread {} to sleep for {}", Thread.currentThread().getName(), sleepTimer);
             Thread.currentThread().sleep(sleepTimer);
         } catch (InterruptedException e) {
             e.printStackTrace();

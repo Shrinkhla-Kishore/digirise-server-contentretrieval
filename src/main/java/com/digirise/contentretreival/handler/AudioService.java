@@ -35,12 +35,9 @@ public class AudioService {
         CompletableFuture<List<AdvancedPlayer>> audioContent = new CompletableFuture<>();
         CompletableFuture.runAsync(() -> {
             List<AdvancedPlayer> audioFiles = new ArrayList<>();
-            AudioInputStream audioInputStream = null;
-            Clip clip = null;
             try {
                 List<File> allFiles = Arrays.asList(new File(contentLocation).listFiles());
                 for (File fileName : allFiles) {
-                    s_logger.info("file to fetch is {}", contentLocation + fileName);
                     if (fileName.toString().contains(".mp3")) {
                         FileInputStream in = new FileInputStream(fileName);
                         AdvancedPlayer player = new AdvancedPlayer(in);

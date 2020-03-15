@@ -29,14 +29,14 @@ class Controller {
                 audioRequest.getTitle(),audioRequest.getEpisodeNumber(), audioRequest.getLocation());
         CompletableFuture<ResponseEntity<String>> audioCf = audioService.getAudioLocation
                 (audioRequest.getTitle(), audioRequest.getEpisodeNumber())
-                .thenApply((audio) -> {
-                    StringBuilder audioLocation = new StringBuilder();
-                    audioLocation.append(audio.getLocation());
-                    s_logger.info("audioLocation is {}", audioLocation.toString());
+                .handle((audio, throwable) -> {
+                    s_logger.info("Inside handle !!!");
                     ResponseEntity<String> responseEntity;
-                    if (audioLocation.toString() != null && audioLocation.length() > 0) {
-                        responseEntity  = new ResponseEntity<>(audioLocation.toString(), HttpResponseHeaders.createHttpHeaders("location", audioLocation.toString()), HttpStatus.CREATED);
+                    if (throwable == null && audio != null) {
+                        s_logger.info("audioLocation is {}", audio.getLocation());
+                        responseEntity  = new ResponseEntity<>(audio.getLocation(), HttpResponseHeaders.createHttpHeaders("location", audio.getLocation()), HttpStatus.CREATED);
                     } else {
+                        s_logger.info("Received exception {}", throwable.getLocalizedMessage());
                         responseEntity  = new ResponseEntity<>(null, HttpResponseHeaders.createHttpHeaders("location", ""), HttpStatus.BAD_REQUEST);
                     }
                     return responseEntity;

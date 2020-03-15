@@ -61,6 +61,7 @@ class AudioApiTest {
                 .andExpect(MockMvcResultMatchers.header().exists("location"));
         if (MockMvcResultMatchers.header().exists("location") != null) {
             s_logger.info("Location for the audio content is {}", result.getResponse().getContentAsString());
+            Assert.notNull(result.getResponse().getContentAsString(), "Location should ot be null");
         }
 
 
